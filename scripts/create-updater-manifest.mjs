@@ -26,7 +26,7 @@ if (!signatureName) {
 
 const archiveName = signatureName.replace(/\.sig$/, "");
 const repository = process.env.GITHUB_REPOSITORY ?? "whitebearovo/YohakuCompanion-Win";
-const tag = process.env.GITHUB_REF_NAME ?? `v${version}`;
+const tag = process.env.RELEASE_TAG ?? process.env.GITHUB_REF_NAME ?? `v${version}`;
 const baseUrl = `https://github.com/${repository}/releases/download/${tag}`;
 const signature = readFileSync(join(bundleDir, signatureName), "utf8").trim();
 

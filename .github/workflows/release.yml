@@ -74,7 +74,8 @@ jobs:
       - name: Validate updater artifact
         shell: pwsh
         run: |
-          $artifact = Get-ChildItem "packages/app/src-tauri/target/release/bundle/nsis" -Filter "*.zip.sig"
+          $artifact = Get-ChildItem "packages/app/src-tauri/target/release/bundle/nsis" -File |
+            Where-Object { $_.Name -match '\.(exe|zip)\.sig$' }
           if (-not $artifact) {
             throw "Tauri did not create a signed updater artifact. Check TAURI_SIGNING_PRIVATE_KEY and the Tauri signing output."
           }
@@ -100,6 +101,5 @@ jobs:
           generate_release_notes: true
           files: |
             packages/app/src-tauri/target/release/bundle/nsis/*-setup.exe
-            packages/app/src-tauri/target/release/bundle/nsis/*.nsis.zip
-            packages/app/src-tauri/target/release/bundle/nsis/*.nsis.zip.sig
+            packages/app/src-tauri/target/release/bundle/nsis/*-setup.exe.sig
             packages/app/src-tauri/target/release/bundle/nsis/latest.json

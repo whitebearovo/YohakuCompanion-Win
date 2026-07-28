@@ -13,13 +13,13 @@ const bundleDir = join(
 );
 const version = JSON.parse(readFileSync("package.json", "utf8")).version;
 const signatureName = readdirSync(bundleDir).find(
-  (name) => name.endsWith(".zip.sig") && name.includes("nsis"),
+  (name) => /(?:\.exe|\.zip)\.sig$/i.test(name),
 );
 
 if (!signatureName) {
   const files = readdirSync(bundleDir).join(", ");
   throw new Error(
-    `No signed NSIS updater artifact found in ${bundleDir}. ` +
+    `No signed Windows updater artifact found in ${bundleDir}. ` +
       `Configure TAURI_SIGNING_PRIVATE_KEY. Files present: ${files || "none"}`,
   );
 }

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { CoreStateSnapshot } from "@yohaku/shared";
 
-export type PageId = "general" | "yohaku" | "privacy" | "status";
+export type PageId = "general" | "yohaku" | "privacy" | "status" | "about";
 
 /**
  * 单一 zustand store。业务数据只有 `snapshot` 一份，整体来自 core 的 state

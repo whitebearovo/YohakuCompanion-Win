@@ -205,6 +205,45 @@ select:focus-visible {
   margin-bottom: 8px;
 }
 
+.about-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.about-mark {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 auto;
+  border-radius: 18px;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  font-size: 30px;
+  font-weight: 700;
+  box-shadow: var(--md-elevation-2);
+}
+
+.about-heading .page-title { margin-bottom: 5px; }
+.about-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.about-info-item { display: flex; flex-direction: column; gap: 5px; padding: 14px; background: color-mix(in srgb, var(--md-surface-container-high) 72%, transparent); border-radius: var(--md-shape-medium); }
+.about-label { color: var(--md-on-surface-variant); font-size: 12px; }
+.about-update-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; }
+.update-status { display: inline-flex; align-items: center; gap: 8px; color: var(--md-on-surface-variant); font-size: 12px; }
+.update-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-outline); }
+.update-status-checking .update-status-dot,
+.update-status-downloading .update-status-dot { background: var(--md-primary); animation: status-blink 1.2s var(--md-motion-standard) infinite; }
+.update-status-upToDate .update-status-dot,
+.update-status-installed .update-status-dot { background: var(--md-success); }
+.update-status-error .update-status-dot { background: var(--md-error); }
+.about-error { overflow-wrap: anywhere; }
+.repository-link { color: var(--md-primary); overflow-wrap: anywhere; text-decoration: none; }
+.repository-link:hover { text-decoration: underline; }
+
+@keyframes status-blink { 50% { opacity: 0.4; transform: scale(1.25); } }
+
 .card {
   background: color-mix(in srgb, var(--md-surface-container) 88%, transparent);
   border: 1px solid color-mix(in srgb, var(--md-outline-variant) 72%, transparent);

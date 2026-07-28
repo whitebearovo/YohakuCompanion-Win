@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AboutPage } from "./pages/AboutPage";
 import { GeneralPage } from "./pages/GeneralPage";
 import { PrivacyRulesPage } from "./pages/PrivacyRulesPage";
 import { StatusPage } from "./pages/StatusPage";
@@ -10,6 +11,7 @@ const NAV_ITEMS: Array<{ id: PageId; label: string }> = [
   { id: "yohaku", label: "Yohaku" },
   { id: "privacy", label: "隐私规则" },
   { id: "status", label: "状态" },
+  { id: "about", label: "关于" },
 ];
 
 export function App() {
@@ -35,6 +37,9 @@ export function App() {
         break;
       case "status":
         content = <StatusPage />;
+        break;
+      case "about":
+        content = <AboutPage />;
         break;
     }
   }

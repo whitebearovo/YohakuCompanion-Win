@@ -2,36 +2,12 @@ import { createRoot } from "react-dom/client";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { relaunch } from "@tauri-apps/plugin-process";
-import { check } from "@tauri-apps/plugin-updater";
 import { App } from "./App";
 import { useStore } from "./store";
 import { initTray } from "./tray";
+import { startAutomaticUpdates } from "./updater";
 import { wsClient } from "./wsClient";
 import "./styles.css";
-
-const UPDATE_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
-let updateCheckRunning = false;
-
-async function checkAndInstallUpdate(): Promise<void> {
-  if (updateCheckRunning) return;
-  updateCheckRunning = true;
-  try {
-    const update = await check();
-    if (!update) return;
-    await update.downloadAndInstall();
-    await relaunch();
-  } catch (error) {
-    console.warn("[updater] automatic update check failed", error);
-  } finally {
-    updateCheckRunning = false;
-  }
-}
-
-function startAutomaticUpdates(): void {
-  window.setTimeout(() => void checkAndInstallUpdate(), 10_000);
-  window.setInterval(() => void checkAndInstallUpdate(), UPDATE_CHECK_INTERVAL_MS);
-}
 
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("missing #root");

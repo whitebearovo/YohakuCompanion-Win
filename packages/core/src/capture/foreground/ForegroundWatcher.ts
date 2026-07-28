@@ -65,5 +65,3 @@ export class ForegroundWatcher {
     this.debounceTimer.unref?.();
   }
 }
-
-\n

@@ -34,5 +34,3 @@ export function policyFingerprint(config: PrivacyConfig): string {
   });
   return createHash("sha256").update(JSON.stringify(projection)).digest("hex");
 }
-
-\n

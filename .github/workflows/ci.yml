@@ -43,5 +43,3 @@ jobs:
 
       - name: Build web UI
         run: pnpm --filter @yohaku/app build
-
-\n

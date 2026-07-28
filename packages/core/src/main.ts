@@ -20,7 +20,7 @@ import {
 } from "./store/credentials.js";
 import { FileSequenceStore } from "./store/sequenceStore.js";
 
-const APP_VERSION = "0.1.0";
+const APP_VERSION = "0.3.0";
 
 /** Resolve the bundled PowerShell helper directory (dev vs staged layouts). */
 function psDirectory(): string {

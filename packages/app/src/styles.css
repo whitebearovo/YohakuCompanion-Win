@@ -18,10 +18,10 @@
   --md-outline-variant: #45464f;
   --md-on-surface: #e3e2e9;
   --md-on-surface-variant: #c5c5ce;
-  --md-primary: #b9c3ff;
-  --md-on-primary: #1f2b61;
-  --md-primary-container: #3d4a83;
-  --md-on-primary-container: #dce1ff;
+  --md-primary: #f7dcb4;
+  --md-on-primary: #4a2800;
+  --md-primary-container: #654b27;
+  --md-on-primary-container: #ffddb1;
   --md-secondary: #c5c5dd;
   --md-secondary-container: #45465d;
   --md-on-secondary-container: #e2e1fc;
@@ -69,7 +69,7 @@ body::before {
   height: 30vh;
   top: -12vh;
   right: 8vw;
-  background: #303d79;
+  background: #765733;
 }
 
 body::after {
@@ -77,7 +77,7 @@ body::after {
   height: 32vh;
   bottom: -16vh;
   left: 18vw;
-  background: #3e2d62;
+  background: #5e4228;
 }
 
 button,

@@ -13,6 +13,7 @@
     "core:tray:default",
     "core:menu:default",
     "core:image:default",
+    "updater:default",
     "autostart:allow-enable",
     "autostart:allow-disable",
     "autostart:allow-is-enabled",

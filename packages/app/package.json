@@ -1,6 +1,6 @@
 {
   "name": "@yohaku/app",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "@tauri-apps/api": "2.11.1",
     "@tauri-apps/plugin-autostart": "2.5.1",
     "@tauri-apps/plugin-process": "2.3.1",
+    "@tauri-apps/plugin-updater": "^2.10.1",
     "@yohaku/shared": "workspace:*",
     "react": "19.2.8",
     "react-dom": "19.2.8",

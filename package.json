@@ -1,7 +1,7 @@
 {
   "name": "yohaku-companion-win",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Privacy-first Windows companion for Yohaku Live Desk (Node.js core + Tauri shell)",
   "license": "MIT",
   "scripts": {

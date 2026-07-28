@@ -1,6 +1,6 @@
 [package]
 name = "yohaku-companion-win"
-version = "0.1.0"
+version = "0.3.0"
 description = "Privacy-first Windows companion for Yohaku Live Desk"
 edition = "2021"
 license = "MIT"
@@ -22,3 +22,4 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rand = "0.8"
 tokio = { version = "1", features = ["time"] }
+tauri-plugin-updater = "2.10.1"

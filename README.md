@@ -79,4 +79,4 @@ those capabilities are explicitly negotiated in a future version.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+GPLv3. See [LICENSE](LICENSE).

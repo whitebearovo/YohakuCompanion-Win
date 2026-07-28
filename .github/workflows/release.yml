@@ -46,11 +46,28 @@ jobs:
           pnpm test
           pnpm typecheck
 
+      - name: Validate updater signing key
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:TAURI_SIGNING_PRIVATE_KEY)) {
+            throw "TAURI_SIGNING_PRIVATE_KEY is not configured. Add the Tauri private signing key as a repository Actions secret."
+          }
+
       - name: Build installer
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: pnpm dist
+
+      - name: Validate updater artifact
+        shell: pwsh
+        run: |
+          $artifact = Get-ChildItem "packages/app/src-tauri/target/release/bundle/nsis" -Filter "*.zip.sig"
+          if (-not $artifact) {
+            throw "Tauri did not create a signed updater artifact. Check TAURI_SIGNING_PRIVATE_KEY and the Tauri signing output."
+          }
 
       - name: Create updater manifest
         env:

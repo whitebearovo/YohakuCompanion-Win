@@ -12,13 +12,19 @@ const bundleDir = join(
   "nsis",
 );
 const version = JSON.parse(readFileSync("package.json", "utf8")).version;
-const signatureName = readdirSync(bundleDir).find((name) => name.endsWith(".nsis.zip.sig"));
+const signatureName = readdirSync(bundleDir).find(
+  (name) => name.endsWith(".zip.sig") && name.includes("nsis"),
+);
 
 if (!signatureName) {
-  throw new Error(`No signed NSIS updater artifact found in ${bundleDir}`);
+  const files = readdirSync(bundleDir).join(", ");
+  throw new Error(
+    `No signed NSIS updater artifact found in ${bundleDir}. ` +
+      `Configure TAURI_SIGNING_PRIVATE_KEY. Files present: ${files || "none"}`,
+  );
 }
 
-const archiveName = signatureName.slice(0, -4);
+const archiveName = signatureName.replace(/\.sig$/, "");
 const repository = process.env.GITHUB_REPOSITORY ?? "whitebearovo/YohakuCompanion-Win";
 const tag = process.env.GITHUB_REF_NAME ?? `v${version}`;
 const baseUrl = `https://github.com/${repository}/releases/download/${tag}`;

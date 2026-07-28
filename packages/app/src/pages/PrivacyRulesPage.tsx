@@ -299,10 +299,10 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
   };
 
   return (
-    <Card title="进程映射">
+    <Card title="应用名替换">
       <p className="hint">
-        把辅助进程归并到主应用（例如把 msedgewebview2.exe 映射为宿主应用）。process_name
-        按前台进程名映射；media_process_name 针对媒体会话的进程。修改后需点击保存。
+        按进程名替换上报的应用显示名，例如将 code.exe 替换为 Visual Studio Code。
+        process_name 用于前台应用；media_process_name 用于媒体播放器。修改后需点击保存。
       </p>
       {draft.length === 0 ? (
         <p className="muted">暂无映射。</p>
@@ -311,8 +311,8 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
           <thead>
             <tr>
               <th>类型</th>
-              <th>from</th>
-              <th>to</th>
+              <th>进程名</th>
+              <th>上报名称</th>
               <th />
             </tr>
           </thead>
@@ -335,7 +335,7 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
                   <input
                     className="input"
                     value={row.from}
-                    placeholder="msedgewebview2.exe"
+                    placeholder="code.exe"
                     onChange={(e) => update(index, { from: e.target.value })}
                   />
                 </td>
@@ -343,7 +343,7 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
                   <input
                     className="input"
                     value={row.to}
-                    placeholder="hostapp.exe"
+                    placeholder="Visual Studio Code"
                     onChange={(e) => update(index, { to: e.target.value })}
                   />
                 </td>

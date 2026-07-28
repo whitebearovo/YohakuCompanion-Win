@@ -104,7 +104,7 @@ export class CaptureService {
         application = sanitizeApplication(
           {
             capturedDisplayName: info.displayName,
-            mappedDisplayName: applyMapping(config, "process_name", info.displayName),
+            mappedDisplayName: applyMapping(config, "process_name", info.appId),
             windowTitle: info.windowTitle,
           },
           decision,

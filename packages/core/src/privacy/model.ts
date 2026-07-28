@@ -84,6 +84,9 @@ export function applyMapping(
   type: "process_name" | "media_process_name",
   from: string,
 ): string | null {
-  const hit = config.mappings.find((m) => m.type === type && m.from === from);
+  const key = normalizeAppId(from);
+  const hit = config.mappings.find(
+    (m) => m.type === type && normalizeAppId(m.from) === key,
+  );
   return hit ? hit.to : null;
 }

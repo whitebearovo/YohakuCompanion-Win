@@ -25,6 +25,9 @@ if (!signatureName) {
 }
 
 const archiveName = signatureName.replace(/\.sig$/, "");
+// GitHub normalizes spaces in uploaded release asset names to dots. The
+// signature remains valid because it covers the file bytes, not this URL name.
+const releaseAssetName = archiveName.replace(/\s+/g, ".");
 const repository = process.env.GITHUB_REPOSITORY ?? "whitebearovo/YohakuCompanion-Win";
 const tag = process.env.RELEASE_TAG ?? process.env.GITHUB_REF_NAME ?? `v${version}`;
 const baseUrl = `https://github.com/${repository}/releases/download/${tag}`;
@@ -37,7 +40,7 @@ const manifest = {
   platforms: {
     "windows-x86_64": {
       signature,
-      url: `${baseUrl}/${encodeURIComponent(archiveName).replace(/%2F/g, "/")}`,
+      url: `${baseUrl}/${encodeURIComponent(releaseAssetName).replace(/%2F/g, "/")}`,
     },
   },
 };

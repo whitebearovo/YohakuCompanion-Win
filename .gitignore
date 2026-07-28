@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.tsbuildinfo
+packages/app/src-tauri/target/
+packages/app/src-tauri/resources/core/
+packages/app/src-tauri/binaries/
+.vite/
+packages/app/app-icon.png
+packages/app/src-tauri/gen/
+packages/app/src-tauri/icons/android/
+packages/app/src-tauri/icons/ios/
+*.log
+.DS_Store

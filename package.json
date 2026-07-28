@@ -1,0 +1,20 @@
+{
+  "name": "yohaku-companion-win",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Privacy-first Windows companion for Yohaku Live Desk (Node.js core + Tauri shell)",
+  "license": "MIT",
+  "scripts": {
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "build:core": "pnpm --filter @yohaku/core build",
+    "dev:core": "pnpm --filter @yohaku/core dev",
+    "stage:core": "node scripts/stage-core.mjs",
+    "fetch:node": "node scripts/fetch-node-sidecar.mjs",
+    "dev:app": "pnpm build:core && pnpm --filter @yohaku/app tauri dev",
+    "dist": "pnpm build:core && node scripts/stage-core.mjs && node scripts/fetch-node-sidecar.mjs && pnpm --filter @yohaku/app tauri build"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

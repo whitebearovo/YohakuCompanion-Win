@@ -58,7 +58,11 @@ export function App() {
             </button>
           ))}
         </nav>
-        <main className="content">{content}</main>
+        <main className="content">
+          <div key={page} className="page-transition">
+            {content}
+          </div>
+        </main>
       </div>
       {!ready && !coreDead ? (
         <div className="overlay">

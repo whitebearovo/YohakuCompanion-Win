@@ -4,7 +4,10 @@ import { useStore } from "../store";
 import {
   checkAndInstallUpdate,
   getUpdaterError,
+  getUpdaterProgress,
   getUpdaterStatus,
+  getUpdateSource,
+  setUpdateSource,
   subscribeUpdater,
 } from "../updater";
 
@@ -27,7 +30,13 @@ export function AboutPage() {
     getUpdaterStatus,
   );
   const updaterError = getUpdaterError();
+  const updaterProgress = getUpdaterProgress();
+  const updateSource = getUpdateSource();
   const checking = updaterStatus === "checking" || updaterStatus === "downloading";
+  const progressPercent =
+    updaterProgress?.total && updaterProgress.total > 0
+      ? Math.min(100, Math.round((updaterProgress.downloaded / updaterProgress.total) * 100))
+      : null;
 
   return (
     <div className="page about-page">
@@ -54,6 +63,18 @@ export function AboutPage() {
 
       <Card title="软件更新">
         <p className="hint">应用会自动检查更新，也可以随时手动检查。</p>
+        <label className="update-source-field">
+          <span className="field-label">更新源</span>
+          <select
+            className="select"
+            value={updateSource}
+            disabled={checking}
+            onChange={(event) => setUpdateSource(event.target.value as "github" | "mirror")}
+          >
+            <option value="github">GitHub 官方源</option>
+            <option value="mirror">中国大陆镜像源</option>
+          </select>
+        </label>
         <div className="about-update-row">
           <span className={`update-status update-status-${updaterStatus}`}>
             <span className="update-status-dot" aria-hidden="true" />
@@ -63,11 +84,20 @@ export function AboutPage() {
             type="button"
             className="btn primary"
             disabled={checking}
-            onClick={() => void checkAndInstallUpdate().catch(() => undefined)}
+            onClick={() => void checkAndInstallUpdate(updateSource).catch(() => undefined)}
           >
             {checking ? "请稍候" : "检查更新"}
           </button>
         </div>
+        {updaterStatus === "downloading" && updaterProgress ? (
+          <div className="update-progress" aria-label="更新下载进度">
+            <div className="update-progress-head">
+              <span>{updaterProgress.version ? `正在下载 v${updaterProgress.version}` : "正在下载更新"}</span>
+              <span>{progressPercent === null ? "准备中" : `${progressPercent}%`}</span>
+            </div>
+            <progress value={progressPercent ?? undefined} max="100" />
+          </div>
+        ) : null}
         {updaterStatus === "error" && updaterError ? (
           <p className="form-error about-error">{updaterError}</p>
         ) : null}

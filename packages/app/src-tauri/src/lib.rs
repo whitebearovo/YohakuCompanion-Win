@@ -4,9 +4,103 @@
 
 use rand::RngCore;
 use std::sync::Mutex;
-use tauri::{Manager, RunEvent};
+use serde::Serialize;
+use tauri::{Emitter, Manager, RunEvent};
 use tauri_plugin_shell::process::{CommandChild, CommandEvent};
 use tauri_plugin_shell::ShellExt;
+use tauri_plugin_updater::UpdaterExt;
+use url::Url;
+
+const GITHUB_UPDATE_ENDPOINT: &str =
+    "https://github.com/whitebearovo/YohakuCompanion-Win/releases/latest/download/latest.json";
+const MIRROR_PREFIX: &str = "https://ghfast.top/";
+
+#[derive(Clone, Serialize)]
+struct UpdaterProgress {
+    phase: &'static str,
+    downloaded: u64,
+    total: Option<u64>,
+    version: Option<String>,
+}
+
+fn emit_updater_progress(
+    app: &tauri::AppHandle,
+    phase: &'static str,
+    downloaded: u64,
+    total: Option<u64>,
+    version: Option<String>,
+) {
+    let _ = app.emit(
+        "updater-progress",
+        UpdaterProgress {
+            phase,
+            downloaded,
+            total,
+            version,
+        },
+    );
+}
+
+#[tauri::command]
+async fn check_and_install_update(
+    app: tauri::AppHandle,
+    source: String,
+) -> Result<(), String> {
+    let use_mirror = match source.as_str() {
+        "github" => false,
+        "mirror" => true,
+        _ => return Err("invalid update source".into()),
+    };
+    let endpoint = if use_mirror {
+        format!("{MIRROR_PREFIX}{GITHUB_UPDATE_ENDPOINT}")
+    } else {
+        GITHUB_UPDATE_ENDPOINT.to_string()
+    };
+    let endpoint = Url::parse(&endpoint).map_err(|error| error.to_string())?;
+    let updater = app
+        .updater_builder()
+        .endpoints(vec![endpoint])
+        .map_err(|error| error.to_string())?
+        .build()
+        .map_err(|error| error.to_string())?;
+
+    let Some(mut update) = updater.check().await.map_err(|error| error.to_string())? else {
+        emit_updater_progress(&app, "upToDate", 0, None, None);
+        return Ok(());
+    };
+
+    let version = update.version.clone();
+    // The manifest contains the canonical GitHub asset URL. Mirror mode only
+    // prefixes that URL, leaving the signed bytes and signature unchanged.
+    if use_mirror && !update.download_url.as_str().starts_with(MIRROR_PREFIX) {
+        let mirrored_url = format!("{MIRROR_PREFIX}{}", update.download_url);
+        update.download_url = Url::parse(&mirrored_url).map_err(|error| error.to_string())?;
+    }
+
+    emit_updater_progress(&app, "downloading", 0, None, Some(version.clone()));
+    let progress_app = app.clone();
+    let finish_app = app.clone();
+    let chunk_version = version.clone();
+    let mut downloaded = 0u64;
+    update
+        .download_and_install(
+            move |chunk, total| {
+                downloaded += chunk as u64;
+                emit_updater_progress(
+                    &progress_app,
+                    "downloading",
+                    downloaded,
+                    total,
+                    Some(chunk_version.clone()),
+                );
+            },
+            move || {
+                emit_updater_progress(&finish_app, "verifying", 0, None, Some(version));
+            },
+        )
+        .await
+        .map_err(|error| error.to_string())
+}
 
 struct CoreState {
     token: String,
@@ -137,8 +231,6 @@ fn supervise_core(app: tauri::AppHandle) {
     });
 }
 
-use tauri::Emitter;
-
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
@@ -160,7 +252,11 @@ pub fn run() {
             child: Mutex::new(None),
             exiting: Mutex::new(false),
         })
-        .invoke_handler(tauri::generate_handler![get_core_endpoint, is_hidden_launch])
+        .invoke_handler(tauri::generate_handler![
+            get_core_endpoint,
+            is_hidden_launch,
+            check_and_install_update
+        ])
         .setup(|app| {
             supervise_core(app.handle().clone());
             Ok(())

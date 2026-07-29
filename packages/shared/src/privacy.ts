@@ -23,7 +23,8 @@ export const applicationPrivacyRuleSchema = z.object({
 export type ApplicationPrivacyRule = z.infer<typeof applicationPrivacyRuleSchema>;
 
 export const privacyMappingSchema = z.object({
-  type: z.enum(["process_name", "media_process_name"]),
+  // Keep media_process_name valid for configs written by older releases.
+  type: z.enum(["process_name", "media_process_name", "media_player_name"]),
   from: z.string().min(1),
   to: z.string().min(1),
 });

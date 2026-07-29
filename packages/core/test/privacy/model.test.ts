@@ -8,6 +8,7 @@ const config: PrivacyConfig = {
   mappings: [
     { type: "process_name", from: "code.exe", to: "Visual Studio Code" },
     { type: "media_process_name", from: "Spotify.EXE", to: "Spotify" },
+    { type: "media_player_name", from: "YouTube Music", to: "YouTube Music Desktop" },
   ],
   shareWindowTitles: false,
   ignoreNullArtist: false,
@@ -25,5 +26,11 @@ describe("process-name application mappings", () => {
 
   it("does not cross mapping types", () => {
     expect(applyMapping(config, "media_process_name", "code.exe")).toBeNull();
+  });
+
+  it("maps the captured media player name explicitly", () => {
+    expect(applyMapping(config, "media_player_name", " youtube music ")).toBe(
+      "YouTube Music Desktop",
+    );
   });
 });

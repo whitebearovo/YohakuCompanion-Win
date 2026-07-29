@@ -302,7 +302,7 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
     <Card title="应用名替换">
       <p className="hint">
         按进程名替换上报的应用显示名，例如将 code.exe 替换为 Visual Studio Code。
-        process_name 用于前台应用；media_process_name 用于媒体播放器。修改后需点击保存。
+        process_name 用于前台应用；media_player_name 匹配读取到的播放器名称。未配置媒体播放器映射时，使用读取到的原名称。修改后需点击保存。
       </p>
       {draft.length === 0 ? (
         <p className="muted">暂无映射。</p>
@@ -328,7 +328,8 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
                     }
                   >
                     <option value="process_name">进程名</option>
-                    <option value="media_process_name">媒体进程名</option>
+                    <option value="media_player_name">媒体播放器名称</option>
+                    <option value="media_process_name">旧版媒体名称</option>
                   </select>
                 </td>
                 <td>

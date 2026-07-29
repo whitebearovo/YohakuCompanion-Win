@@ -63,7 +63,9 @@ export class CaptureService {
             mappedPlayerName:
               raw.playerDisplayName === null
                 ? null
-                : applyMapping(config, "media_process_name", raw.playerDisplayName),
+                : applyMapping(config, "media_player_name", raw.playerDisplayName) ??
+                  // Compatibility with mappings saved before media_player_name.
+                  applyMapping(config, "media_process_name", raw.playerDisplayName),
             playing: raw.playing,
             durationSeconds: raw.durationSeconds,
             positionSeconds: raw.positionSeconds,

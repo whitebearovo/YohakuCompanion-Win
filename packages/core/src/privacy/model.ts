@@ -81,7 +81,7 @@ export function findRuleByPlayerName(
 /** First-match exact mapping lookup for one mapping type. */
 export function applyMapping(
   config: PrivacyConfig,
-  type: "process_name" | "media_process_name",
+  type: "process_name" | "media_process_name" | "media_player_name",
   from: string,
 ): string | null {
   const key = normalizeAppId(from);

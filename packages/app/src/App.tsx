@@ -18,7 +18,6 @@ const NAV_ITEMS: Array<{ id: PageId; label: string }> = [
 export function App() {
   const connected = useStore((s) => s.connected);
   const snapshot = useStore((s) => s.snapshot);
-  const coreDead = useStore((s) => s.coreDead);
   const page = useStore((s) => s.page);
   const setPage = useStore((s) => s.setPage);
   const background = useBackgroundSettings();
@@ -57,9 +56,6 @@ export function App() {
         } as CSSProperties
       }
     >
-      {coreDead ? (
-        <div className="error-bar">核心服务已停止且无法自动恢复，请退出后重新启动应用。</div>
-      ) : null}
       <div className="layout">
         <nav className="nav">
           <div className="nav-brand">Yohaku Companion</div>
@@ -80,11 +76,11 @@ export function App() {
           </div>
         </main>
       </div>
-      {!ready && !coreDead ? (
+      {!ready ? (
         <div className="overlay">
           <div className="overlay-box">
             <div className="spinner" />
-            <div>正在连接核心服务…</div>
+            <div>正在加载核心状态…</div>
           </div>
         </div>
       ) : null}

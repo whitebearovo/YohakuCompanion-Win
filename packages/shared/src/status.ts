@@ -62,7 +62,7 @@ export const previewSchema = z.object({
 export type Preview = z.infer<typeof previewSchema>;
 
 export const mediaProviderHealthSchema = z.object({
-  kind: z.enum(["npm", "powershell", "none"]),
+  kind: z.enum(["winrt", "none"]),
   healthy: z.boolean(),
   detail: z.string().optional(),
 });

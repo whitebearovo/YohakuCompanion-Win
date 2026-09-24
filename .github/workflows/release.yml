@@ -56,6 +56,10 @@ jobs:
           pnpm test
           pnpm typecheck
 
+      - name: Run Rust tests
+        working-directory: packages/app/src-tauri
+        run: cargo test --workspace
+
       - name: Validate updater signing key
         shell: pwsh
         env:

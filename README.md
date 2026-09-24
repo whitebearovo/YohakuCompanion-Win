@@ -7,7 +7,8 @@ Companion Protocol v2.
 
 This is a Windows implementation inspired by
 [Innei/YohakuCompanion](https://github.com/Innei/YohakuCompanion). It uses a
-Node.js TypeScript core and a Tauri v2 desktop shell with a React settings UI.
+native Rust core (running inside the Tauri v2 process) and a React settings
+UI.
 
 ## Privacy model
 
@@ -25,9 +26,8 @@ Node.js TypeScript core and a Tauri v2 desktop shell with a React settings UI.
 ## Requirements
 
 - Windows 10 1809 or later; Windows 11 recommended
-- Node.js 24.15.0 and pnpm 11
-- Rust stable and MSVC Build Tools for Tauri development/builds
-- PowerShell 5.1 or later
+- Node.js 24.15.0 and pnpm 11 (web UI build)
+- Rust stable and MSVC Build Tools
 
 ## Development
 
@@ -38,13 +38,11 @@ pnpm typecheck
 pnpm --filter @yohaku/app build
 ```
 
-Run the headless core:
+Run the Rust core tests (workspace covers the core crate and the Tauri shell):
 
 ```text
-pnpm dev:core
-pnpm --filter @yohaku/core mock-server
-pnpm --filter @yohaku/core smoke:foreground
-pnpm --filter @yohaku/core smoke:media
+cd packages/app/src-tauri
+cargo test --workspace
 ```
 
 Run the Tauri app in development mode:
@@ -59,10 +57,9 @@ Build the unsigned per-user NSIS installer:
 pnpm dist
 ```
 
-The release process downloads the pinned Node.js sidecar, verifies its
-SHA-256 against the official `SHASUMS256.txt`, stages the core, and builds the
-installer. The GitHub release workflow performs the same steps on a clean
-Windows runner.
+The GitHub release workflow runs the TypeScript and Rust test suites and
+builds the installer on a clean Windows runner. There is no bundled Node.js
+sidecar anymore; the core is compiled into the app binary.
 
 ## Data locations
 

@@ -7,7 +7,7 @@ import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 import { exit } from "@tauri-apps/plugin-process";
 import { runtimeStateText } from "./labels";
 import { useStore, type PageId } from "./store";
-import { wsClient } from "./wsClient";
+import { coreClient } from "./coreClient";
 
 let tray: TrayIcon | null = null;
 let lastKey: string | null = null;
@@ -35,7 +35,7 @@ async function openSettings(page?: PageId): Promise<void> {
 async function quit(): Promise<void> {
   try {
     await Promise.race([
-      wsClient.send({ cmd: "shutdown" }),
+      coreClient.send({ cmd: "shutdown" }),
       new Promise<void>((resolve) => setTimeout(resolve, 1500)),
     ]);
   } catch {
@@ -79,7 +79,7 @@ async function buildMenu(): Promise<Menu> {
         await MenuItem.new({
           id: "pause-sharing",
           text: "暂停分享",
-          action: () => void wsClient.send({ cmd: "disableLiveDesk" }).catch(() => undefined),
+          action: () => void coreClient.send({ cmd: "disableLiveDesk" }).catch(() => undefined),
         }),
       );
     } else {

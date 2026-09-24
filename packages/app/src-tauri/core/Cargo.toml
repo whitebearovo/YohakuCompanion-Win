@@ -1,0 +1,36 @@
+# yohaku-core — native Rust port of packages/core (the Node.js companion core).
+#
+# This crate targets Windows (MSVC) only: the capture/store modules talk to
+# Win32 + WinRT directly and are gated #[cfg(windows)]. Pure-logic modules
+# (protocol, privacy, companion service) stay platform-neutral.
+#
+# Scaffold-owned: implementation agents must not restructure this manifest.
+[package]
+name = "yohaku-core"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+description = "Native core for the Yohaku Live Desk Windows companion (protocol, privacy pipeline, capture, stores)"
+
+[dependencies]
+async-trait = "0.1.92"
+chrono = "0.4.45"
+once_cell = "1.21.4"
+parking_lot = "0.12.5"
+rand = "0.10.3"
+reqwest = { version = "0.13.5", features = ["json", "native-tls"], default-features = false }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+sha2 = "0.11.0"
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "sync", "time", "macros"] }
+unicode-normalization = "0.1.25"
+url = "2.5.8"
+uuid = { version = "1.26.1", features = ["v4"] }
+
+[target."cfg(windows)".dependencies]
+windows = { version = "0.62.2", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging", "Win32_System_Threading", "Win32_Storage_FileSystem", "Win32_System_RemoteDesktop", "Win32_System_Power", "Win32_Security_Credentials", "Win32_Security_Cryptography", "Win32_System_Com", "Win32_System_WinRT", "Media_Control", "Foundation", "Foundation_Collections", "Storage_Streams"] }
+
+[dev-dependencies]
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "sync", "time", "macros", "net", "io-util", "test-util"] }
+tokio-test = "0.4.5"

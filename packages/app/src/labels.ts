@@ -1,5 +1,5 @@
 import type { MediaProviderHealth, RuntimeState } from "@yohaku/shared";
-import { IpcError, type SendErrorCode } from "./wsClient";
+import { IpcError, type SendErrorCode } from "./coreClient";
 
 /** runtimeState → 中文标签（托盘状态行 / 徽章共用）。 */
 export const runtimeStateText: Record<RuntimeState, string> = {
@@ -58,8 +58,7 @@ export function sendErrorMessage(error: unknown): string {
 }
 
 export const mediaProviderKindText: Record<MediaProviderHealth["kind"], string> = {
-  npm: "Node 原生媒体模块",
-  powershell: "PowerShell 回退方案",
+  winrt: "系统媒体控制 (SMTC)",
   none: "不可用",
 };
 

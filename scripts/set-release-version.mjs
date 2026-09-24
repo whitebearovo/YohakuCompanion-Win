@@ -21,7 +21,6 @@ function replaceJsonVersion(path) {
 for (const path of [
   "package.json",
   "packages/app/package.json",
-  "packages/core/package.json",
   "packages/shared/package.json",
   "packages/app/src-tauri/tauri.conf.json",
 ]) {
@@ -36,14 +35,5 @@ if (!cargoVersionPattern.test(cargo)) {
 }
 const updatedCargo = cargo.replace(cargoVersionPattern, `$1${version}$2`);
 writeFileSync(cargoPath, updatedCargo);
-
-const mainPath = "packages/core/src/main.ts";
-const main = readFileSync(mainPath, "utf8");
-const mainVersionPattern = /(const APP_VERSION = ")[^"]+(";)/;
-if (!mainVersionPattern.test(main)) {
-  throw new Error(`Could not update APP_VERSION in ${mainPath}`);
-}
-const updatedMain = main.replace(mainVersionPattern, `$1${version}$2`);
-writeFileSync(mainPath, updatedMain);
 
 console.log(`Release version set to ${version} from ${tag}`);

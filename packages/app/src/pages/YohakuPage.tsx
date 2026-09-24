@@ -3,7 +3,7 @@ import type { ConnectionSummary, CoreStateSnapshot } from "@yohaku/shared";
 import { Badge, Card, KvRow } from "../components";
 import { runtimeStateText, runtimeStateTone, sendErrorMessage } from "../labels";
 import { useStore } from "../store";
-import { IpcError, wsClient } from "../wsClient";
+import { IpcError, coreClient } from "../coreClient";
 
 export function YohakuPage() {
   const snapshot = useStore((s) => s.snapshot);
@@ -35,7 +35,7 @@ function PairForm() {
     }
     setBusy(true);
     try {
-      await wsClient.send({
+      await coreClient.send({
         cmd: "pair",
         baseUrl: baseUrl.trim(),
         deviceName: deviceName.trim(),
@@ -110,7 +110,7 @@ function PairedView(props: { snapshot: CoreStateSnapshot; connection: Connection
   useEffect(() => {
     const request = (): void => {
       if (document.hidden) return;
-      void wsClient.send({ cmd: "requestPreview" }).catch(() => undefined);
+      void coreClient.send({ cmd: "requestPreview" }).catch(() => undefined);
     };
     request();
     const timer = setInterval(request, 3000);
@@ -124,7 +124,7 @@ function PairedView(props: { snapshot: CoreStateSnapshot; connection: Connection
     setBusy(true);
     setError(null);
     try {
-      await wsClient.send({
+      await coreClient.send({
         cmd: "confirmConsent",
         policyFingerprint: preview.policyFingerprint,
       });
@@ -133,7 +133,7 @@ function PairedView(props: { snapshot: CoreStateSnapshot; connection: Connection
       if (e instanceof IpcError && e.code === "previewOutOfDate") {
         // fail-closed 重确认循环：内容已变化，拉取新预览并要求再次确认
         setStale(true);
-        void wsClient.send({ cmd: "requestPreview" }).catch(() => undefined);
+        void coreClient.send({ cmd: "requestPreview" }).catch(() => undefined);
       } else {
         setError(sendErrorMessage(e));
       }
@@ -144,7 +144,7 @@ function PairedView(props: { snapshot: CoreStateSnapshot; connection: Connection
 
   const pauseSharing = (): void => {
     setError(null);
-    void wsClient.send({ cmd: "disableLiveDesk" }).catch((e) => setError(sendErrorMessage(e)));
+    void coreClient.send({ cmd: "disableLiveDesk" }).catch((e) => setError(sendErrorMessage(e)));
   };
 
   const unpair = (): void => {
@@ -152,7 +152,7 @@ function PairedView(props: { snapshot: CoreStateSnapshot; connection: Connection
       return;
     }
     setError(null);
-    void wsClient.send({ cmd: "unpair" }).catch((e) => setError(sendErrorMessage(e)));
+    void coreClient.send({ cmd: "unpair" }).catch((e) => setError(sendErrorMessage(e)));
   };
 
   let host = connection.baseUrl;

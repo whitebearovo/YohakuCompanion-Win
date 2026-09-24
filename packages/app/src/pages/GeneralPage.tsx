@@ -3,7 +3,7 @@ import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 import { Badge, Card, KvRow, Toggle } from "../components";
 import { mediaProviderKindText } from "../labels";
 import { useStore } from "../store";
-import { wsClient, type CommandInput } from "../wsClient";
+import { coreClient, type CommandInput } from "../coreClient";
 import {
   setBackgroundBlur,
   setBackgroundImage,
@@ -13,7 +13,7 @@ import {
 
 function run(cmd: CommandInput): void {
   // 命令成功后 core 必然广播新 state，UI 随快照回流刷新；失败则快照不变、开关自动回弹
-  void wsClient.send(cmd).catch((error) => console.error("[general] command failed", error));
+  void coreClient.send(cmd).catch((error) => console.error("[general] command failed", error));
 }
 
 export function GeneralPage() {

@@ -8,7 +8,7 @@ import type {
 import { Card } from "../components";
 import { sendErrorMessage } from "../labels";
 import { useStore } from "../store";
-import { wsClient } from "../wsClient";
+import { coreClient } from "../coreClient";
 
 const OVERRIDE_OPTIONS: Array<{ value: PrivacyOverride; label: string }> = [
   { value: "inherit", label: "继承默认" },
@@ -30,7 +30,7 @@ export function PrivacyRulesPage() {
     media?: PrivacyDefault;
   }): void => {
     setError(null);
-    void wsClient
+    void coreClient
       .send({ cmd: "setPrivacy", patch: { defaults } })
       .catch((e) => setError(sendErrorMessage(e)));
   };
@@ -39,7 +39,7 @@ export function PrivacyRulesPage() {
     const appId = rawId.trim().toLowerCase();
     if (!appId) return;
     setError(null);
-    void wsClient
+    void coreClient
       .send({
         cmd: "upsertRule",
         rule: { appId, application: "inherit", windowTitle: "inherit", media: "inherit" },
@@ -200,7 +200,7 @@ function RuleRow(props: { rule: ApplicationPrivacyRule; onError: (msg: string) =
       media: patch.media ?? rule.media,
     };
     if (nextAlias) next.displayAlias = nextAlias;
-    void wsClient.send({ cmd: "upsertRule", rule: next }).catch((e) => onError(sendErrorMessage(e)));
+    void coreClient.send({ cmd: "upsertRule", rule: next }).catch((e) => onError(sendErrorMessage(e)));
   };
 
   const commitAlias = (): void => {
@@ -209,7 +209,7 @@ function RuleRow(props: { rule: ApplicationPrivacyRule; onError: (msg: string) =
   };
 
   const remove = (): void => {
-    void wsClient
+    void coreClient
       .send({ cmd: "deleteRule", appId: rule.appId })
       .catch((e) => onError(sendErrorMessage(e)));
   };
@@ -286,7 +286,7 @@ function MappingsEditor(props: { mappings: PrivacyMapping[]; onError: (msg: stri
       cleaned.push({ type: row.type, from, to });
     }
     setSaving(true);
-    void wsClient
+    void coreClient
       .send({ cmd: "setMappings", mappings: cleaned })
       .then(() => setDirty(false))
       .catch((e) => onError(sendErrorMessage(e)))

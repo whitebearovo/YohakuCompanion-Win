@@ -16,7 +16,7 @@ jobs:
   check:
     name: Test and typecheck
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +32,16 @@ jobs:
           node-version: 24.15.0
           cache: pnpm
 
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: packages/app/src-tauri
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -40,6 +50,10 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Run Rust tests
+        working-directory: packages/app/src-tauri
+        run: cargo test --workspace --locked
 
       - name: Build web UI
         run: pnpm --filter @yohaku/app build
